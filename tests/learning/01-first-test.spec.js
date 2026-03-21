@@ -200,3 +200,110 @@ test('Navigation test - Multiple tabs', async({context, page}) => {
     // Regresar
     await expect(page).toHaveURL(/inventory.html/)
 })
+
+test('Elementos dinamicas - Listas', async({page}) => {
+    //Locators
+    const inputUsername = page.locator('#user-name')
+    const inputPassword = page.locator('#password')
+    const btnLogin = page.locator('#login-button')
+
+    // Navegar a la pagina
+    await page.goto('https://www.saucedemo.com/')
+
+    // Sync e Ingresar Username
+    await expect(inputUsername).toBeVisible();
+    await inputUsername.fill('standard_user') 
+
+    // Ingresar Password
+    await expect(inputPassword).toBeVisible();
+    await inputPassword.fill('secret_sauce') 
+
+    // Click Login
+    await expect(btnLogin).toBeEnabled()
+    await btnLogin.click()
+
+    const addButton = page.locator('button', {hasText: 'Add to cart'})
+    const cartBadge = page.locator("[data-test='shopping-cart-badge']")
+
+    const firstAddButton = addButton.first()
+
+    await expect(firstAddButton).toBeVisible()
+    await firstAddButton.click()
+
+    await expect(cartBadge).toHaveText('1')
+})
+
+test('Elementos dinamicas - Listas (Index) nth', async({page}) => {
+    //Locators
+    const inputUsername = page.locator('#user-name')
+    const inputPassword = page.locator('#password')
+    const btnLogin = page.locator('#login-button')
+    const inventoryPages = page.locator('.inventory_item')
+
+    // Navegar a la pagina
+    await page.goto('https://www.saucedemo.com/')
+
+    // Sync e Ingresar Username
+    await expect(inputUsername).toBeVisible();
+    await inputUsername.fill('standard_user') 
+
+    // Ingresar Password
+    await expect(inputPassword).toBeVisible();
+    await inputPassword.fill('secret_sauce') 
+
+    // Click Login
+    await expect(btnLogin).toBeEnabled()
+    await btnLogin.click()
+
+    // INDEX - Seleccionar el segundo item
+    const secondItem = inventoryPages.nth(1)
+
+    // Buscar el boton de Add to cart
+    const secondItemButton = secondItem.locator('button')
+    const cartBadge = page.locator("[data-test='shopping-cart-badge']")
+
+    await secondItemButton.click()
+
+    await expect(cartBadge).toHaveText('1')
+
+})
+
+test('Elementos dinamicas - Filter (Index)', async({page}) => {
+    //Locators
+    const inputUsername = page.locator('#user-name')
+    const inputPassword = page.locator('#password')
+    const btnLogin = page.locator('#login-button')
+
+    // Navegar a la pagina
+    await page.goto('https://www.saucedemo.com/')
+
+    // Sync e Ingresar Username
+    await expect(inputUsername).toBeVisible();
+    await inputUsername.fill('standard_user') 
+
+    // Ingresar Password
+    await expect(inputPassword).toBeVisible();
+    await inputPassword.fill('secret_sauce') 
+
+    // Click Login
+    await expect(btnLogin).toBeEnabled()
+    await btnLogin.click()
+
+    // Filter
+    const bikeLightElement = page
+    .locator('.inventory_item')
+    .filter({hasText: 'Sauce Labs Bike Light'})
+
+    const itemName = bikeLightElement.locator('.inventory_item_name')
+    const itemButton = bikeLightElement.locator('button')
+
+    await expect(itemName).toHaveText('Sauce Labs Bike Light')
+    await expect(itemButton).toBeVisible()
+
+    await itemButton.click()
+
+    const cartBadge = page.locator("[data-test='shopping-cart-badge']")
+
+    await expect(cartBadge).toHaveText('1')
+
+})
