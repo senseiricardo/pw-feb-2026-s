@@ -108,3 +108,95 @@ test('My First Test - Waits', async({page}) => {
     //await expect(txtProducts).toHaveText('Products') // Validar
     await expect(txtProducts).toContainText('Product') // Sync 
 })
+
+test('Navigation test', async({page}) => {
+    //Locators
+    const inputUsername = page.locator('#user-name')
+    const inputPassword = page.locator('#password')
+    const btnLogin = page.locator('#login-button')
+    const cartLink = page.locator('[data-test=shopping-cart-link]')
+
+    // Navegar a la pagina
+    await page.goto('https://www.saucedemo.com/')
+
+    // Sync e Ingresar Username
+    await expect(inputUsername).toBeVisible();
+    await inputUsername.fill('standard_user') 
+
+    // Ingresar Password
+    await expect(inputPassword).toBeVisible();
+    await inputPassword.fill('secret_sauce') 
+
+    // Click Login
+    await expect(btnLogin).toBeEnabled()
+    await btnLogin.click()
+
+    // click Cart
+    await cartLink.click()
+
+    // Go Back - Regresar a la pagina anterior
+    // Simula el back del navegar
+    await page.goBack() // Navigation feature
+
+    await expect(page).toHaveURL(/inventory.html/)
+
+    // Reload - Simular el refresh page
+    await page.reload()
+    await expect(page).toHaveURL(/inventory.html/)
+})
+
+test('Navigation test - Additional page', async({page}) => {
+
+    const txtExampleDomain = page.locator('h1')
+
+    await page.goto('https://www.saucedemo.com/')
+
+    await page.goto('https://www.example.com/')
+
+    await expect(txtExampleDomain).toHaveText("Example Domain")
+
+})
+
+test('Navigation test - Multiple tabs', async({context, page}) => {
+
+    //Locators
+    const inputUsername = page.locator('#user-name')
+    const inputPassword = page.locator('#password')
+    const btnLogin = page.locator('#login-button')
+
+    // Navegar a la pagina
+    await page.goto('https://www.saucedemo.com/')
+
+    // Sync e Ingresar Username
+    await expect(inputUsername).toBeVisible();
+    await inputUsername.fill('standard_user') 
+
+    // Ingresar Password
+    await expect(inputPassword).toBeVisible();
+    await inputPassword.fill('secret_sauce') 
+
+    // Click Login
+    await expect(btnLogin).toBeEnabled()
+    await btnLogin.click()
+
+    // Validation
+    await expect(page).toHaveURL(/inventory.html/)
+
+    // SIMULACION - Como SauceDemo no tiene la funcion de multiple tabs, lo simularemos
+    const newPagePromise = context.waitForEvent('page'); // crear un objeto Promise
+    await page.evaluate(() => {
+        window.open('https://example.com/', '_blank');
+    });
+
+    // TEST MULTIPLE TAB
+    const newPage = await newPagePromise;
+
+    const txtExampleDomain = newPage.locator('h1')
+    // Esperar a que la nueva pagina cargue
+    await newPage.waitForLoadState();
+    await expect(newPage).toHaveURL('https://example.com/')
+    await expect(txtExampleDomain).toHaveText("Example Domain")
+
+    // Regresar
+    await expect(page).toHaveURL(/inventory.html/)
+})
