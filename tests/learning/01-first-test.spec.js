@@ -74,3 +74,37 @@ test('My First Test - Sauce Demo app', async({page}) => {
     // Validar que el nombre de la pantalla sea products
     await expect(page.locator('[data-test=title]')).toHaveText('Products')
 })
+
+test('My First Test - Waits', async({page}) => {
+
+    // Locators
+    const inputUsername = page.locator('#user-name')
+    const inputPassword = page.locator('#password')
+    const btnLogin = page.locator('#login-button')
+    const txtProducts = page.locator('[data-test=title]')
+
+    // Navegar a la pagina
+    await page.goto('https://www.saucedemo.com/')
+
+    // Sync e Ingresar Username
+    await expect(inputUsername).toBeVisible();
+    await inputUsername.fill('standard_user') 
+    //await page.fill('#user-name','standard_user') -> Estructura linear
+
+    // Ingresar Password
+    await expect(inputPassword).toBeVisible();
+    await inputPassword.fill('secret_sauce') 
+    //await page.fill('#password', 'secret_sauce')
+
+    // Click Login
+    await expect(btnLogin).toBeEnabled()
+    await btnLogin.click()
+    //await page.click('#login-button')
+
+    // Validar URL contenga "Inventory" -> Navigation Sync (Sync de Navegacion)
+    await expect(page).toHaveURL(/inventory/) 
+
+    // Validar que el nombre de la pantalla sea products - Focus Sync (Un elemento)
+    //await expect(txtProducts).toHaveText('Products') // Validar
+    await expect(txtProducts).toContainText('Product') // Sync 
+})

@@ -33,7 +33,10 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     // Enabled/Disabled Headless
-    headless: false
+    headless: false,
+    launchOptions:{
+      slowMo: 1000 // wait entre acciones -> Apoyo didactico
+    }
   },
 
   /* Configure projects for major browsers */
