@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test'; // funciones de playwright -> Mandatorias
 import { LoginPage } from '../pages/login.page';
 import { InventoryPage } from '../pages/inventory.page';
+import { users } from '../data/users';
 
 // Test Suite -> Agrupador de Tests
 test.describe('Sauce Demo - Login Test Suite', () =>{
@@ -13,7 +14,7 @@ test.describe('Sauce Demo - Login Test Suite', () =>{
 
         // Test Steps
         await loginPage.goto();
-        await loginPage.login('standard_user', 'secret_sauce')
+        await loginPage.login(users.standard.username, users.standard.password)
         // Assertion 1
         await expect(page).toHaveURL(/inventory/)
         // Assertion 2
@@ -24,7 +25,7 @@ test.describe('Sauce Demo - Login Test Suite', () =>{
         const loginPage = new LoginPage(page);
 
         await loginPage.goto();
-        await loginPage.login('standard_user', 'wrong_password')
+        await loginPage.login(users.invalid.username, users.invalid.password)
 
         // Assertion 1
         await expect(loginPage.errorMessage).toBeVisible()
