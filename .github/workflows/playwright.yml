@@ -6,7 +6,7 @@ on:
       test_type:
         description: 'Tipo de tests (smoke, regression)'
         required: true
-        default: 'smoke'
+        default: 'regression'
 
 jobs:
   test:
