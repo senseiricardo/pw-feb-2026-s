@@ -33,7 +33,7 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     // Enabled/Disabled Headless
-    headless: false,
+    headless: process.env.CI ? true : false,
     launchOptions:{
       slowMo: 1000 // wait entre acciones -> Apoyo didactico
     },
