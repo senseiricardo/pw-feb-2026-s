@@ -4,7 +4,7 @@ import { InventoryPage } from '../pages/inventory.page';
 import { users } from '../data/users';
 
 // Test Suite -> Agrupador de Tests
-test.describe('Sauce Demo - Login Test Suite', () =>{
+test.describe('@regression Sauce Demo - Login Test Suite', () =>{
 
     // Instancias
     let loginPage;
@@ -76,7 +76,7 @@ test.describe('Sauce Demo - Login Test Suite', () =>{
         // Assertion 1
         await expect(loginPage.errorMessage).toBeVisible()
         // Assertion 2
-        await expect(loginPage.errorMessage).toContainText('Invalid')
+        await expect(loginPage.errorMessage).toContainText('Username and password do not match')
 
     })
 
